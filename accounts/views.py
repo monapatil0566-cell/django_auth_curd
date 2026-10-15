@@ -86,9 +86,7 @@ def dashboard(request):
     profile, created = UserProfile.objects.get_or_create(
         user=request.user
     )
-    return render(
-        request,
-        "dashboard.html",
+    return render(request,"dashboard.html",
         {"profile": profile}
     )
 
@@ -101,47 +99,61 @@ def logout_view(request):
     return redirect("login")
 
 
+
 @login_required
-def profile_update(request):
+def profile_page(request):
     profile, created = UserProfile.objects.get_or_create(
         user=request.user
     )
 
-    if request.method == "POST":
-        email = request.POST.get("email", "").strip()
-        image = request.FILES.get("profile_image")
+    return render(request, "profile.html", {
+        "profile": profile,
+    })
 
-        if not email:
-            messages.error(request, "Email is required.")
 
-        elif User.objects.filter(email=email).exclude(
-            pk=request.user.pk
-        ).exists():
-            messages.error(
-                request,
-                "Email already belongs to another user."
-            )
+@login_required
+@require_POST
+def profile_update(request):
+    user = request.user
 
-        else:
-            request.user.email = email
-            request.user.save(update_fields=["email"])
-
-            if image:
-                profile.profile_image = image
-
-            profile.save()
-
-            messages.success(
-                request,
-                "Profile updated successfully!"
-            )
-            return redirect("dashboard")
-
-    return render(
-        request,
-        "dashboard.html",
-        {"profile": profile}
+    profile, created = UserProfile.objects.get_or_create(
+        user=user
     )
+
+    email = request.POST.get("email", "").strip()
+    full_name = request.POST.get("full_name", "").strip()
+    phone = request.POST.get("phone", "").strip()
+    address = request.POST.get("address", "").strip()
+
+    if not email:
+        messages.error(request, "Email is required.")
+
+    elif User.objects.filter(email=email).exclude(
+        pk=user.pk
+    ).exists():
+        messages.error(
+            request, "Email already belongs to another user."
+        )
+
+    else:
+        user.email = email
+        user.save(update_fields=["email"])
+
+        profile.full_name = full_name
+        profile.phone = phone
+        profile.address = address
+
+        if request.FILES.get("profile_image"):
+            profile.profile_image = request.FILES["profile_image"]
+
+        profile.save()
+
+        messages.success(
+            request, "Profile updated successfully!"
+        )
+        return redirect("profile")
+
+    return redirect("profile")
 
 
 def staff_required(view):

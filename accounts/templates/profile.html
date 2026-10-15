@@ -1,0 +1,66 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Profile | AuthSpace{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <span class="eyebrow">ACCOUNT SETTINGS</span>
+        <h1>My Profile</h1>
+        <p class="muted">Manage your personal information.</p>
+    </div>
+    <div class="avatar">
+        {{ request.user.username|first|upper }}
+    </div>
+</div>
+
+<section class="panel">
+    <div class="profile-summary">
+        <div class="avatar avatar-small">
+            {{ request.user.username|first|upper }}
+        </div>
+        <div>
+            <strong>{{ request.user.username }}</strong>
+            <p class="muted">Account profile</p>
+        </div>
+        <span class="pill">● Active</span>
+    </div>
+
+    <form method="post"
+          action="{% url 'profile_update' %}"
+          enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>Username</label>
+        <input value="{{ request.user.username }}" disabled>
+
+        <label>Full Name</label>
+        <input name="full_name"
+               value="{{ profile.full_name }}"
+               placeholder="Enter your full name">
+
+        <label>Email Address</label>
+        <input type="email" name="email"
+               value="{{ request.user.email }}" required>
+
+        <label>Phone Number</label>
+        <input type="tel" name="phone"
+               value="{{ profile.phone }}"
+               placeholder="Enter phone number">
+
+        <label>Address</label>
+        <textarea name="address"
+                  rows="4"
+                  placeholder="Enter your address">{{ profile.address }}</textarea>
+
+        <label>Profile Image</label>
+        <input type="file" name="profile_image"
+               accept="image/*">
+
+        <button class="btn full" type="submit">
+            Save Profile Changes →
+        </button>
+    </form>
+</section>
+{% endblock %}
