@@ -1,0 +1,32 @@
+
+{% extends "base.html" %}
+{% block title %}Login | AuthSpace{% endblock %}
+{% block content %}
+<div class="auth-card">
+    <p style="color:#a78bfa;font-size:12px;font-weight:700;letter-spacing:2px">
+        WELCOME BACK
+    </p>
+    <h1>Sign in to your account</h1>
+    <p class="muted">Enter your credentials to continue to your dashboard.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <label>Username</label>
+        <input name="username" placeholder="Enter your username"
+               value="{{ request.POST.username|default:'' }}"
+               autocomplete="username" required autofocus>
+
+        <label>Password</label>
+        <input type="password" name="password"
+               placeholder="Enter your password"
+               autocomplete="current-password" required>
+
+        <button class="btn full" type="submit">Sign In →</button>
+    </form>
+
+    <p class="muted" style="text-align:center;margin-top:24px">
+        New here?
+        <a href="{% url 'register' %}" style="color:#c4b5fd">Create an account</a>
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,175 @@
+<!-- 
+{% extends "base.html" %}
+{% block title %}Create Account | AuthSpace{% endblock %}
+{% block content %}
+<div class="auth-card">
+    <p style="color:#a78bfa;font-size:12px;font-weight:700;letter-spacing:2px">
+        GET STARTED
+    </p>
+    <h1>Create your account ✨</h1>
+    <p class="muted">Join AuthSpace and manage your account securely.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <label>Username</label>
+        <input name="username" placeholder="Choose a username"
+               value="{{ request.POST.username|default:'' }}"
+               autocomplete="username" required>
+
+        <label>Email address</label>
+        <input type="email" name="email" placeholder="you@example.com"
+               value="{{ request.POST.email|default:'' }}"
+               autocomplete="email" required>
+
+        <label>Password</label>
+        <input type="password" name="password" id="password"
+               placeholder="Minimum 8 characters"
+               autocomplete="new-password" minlength="8" required>
+
+        <label>Confirm password</label>
+        <input type="password" name="confirm_password" id="confirm_password"
+               placeholder="Enter password again"
+               autocomplete="new-password" minlength="8" required>
+
+        <label style="display:flex;gap:9px;align-items:center">
+            <input type="checkbox" onclick="togglePasswords()"
+                   style="width:auto">
+            Show passwords
+        </label>
+
+        <button class="btn full" type="submit">Create Account →</button>
+    </form>
+
+    <p class="muted" style="text-align:center;margin-top:24px">
+        Already registered?
+        <a href="{% url 'login' %}" style="color:#c4b5fd">Sign in</a>
+    </p>
+</div>
+<script>
+function togglePasswords() {
+    ["password", "confirm_password"].forEach(id => {
+        const field = document.getElementById(id);
+        field.type = field.type === "password" ? "text" : "password";
+    });
+}
+</script>
+{% endblock %} -->
+
+
+
+{% extends "base.html" %}
+{% block title %}Create Account | AuthSpace{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <p style="color:#a78bfa;font-size:12px;font-weight:700;letter-spacing:2px">
+        GET STARTED
+    </p>
+
+    <h1>Create your account ✨</h1>
+    <p class="muted">Join AuthSpace and manage your account securely.</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label>Full Name</label>
+        <input
+            type="text"
+            name="full_name"
+            placeholder="Enter your full name"
+            value="{{ request.POST.full_name|default:'' }}"
+            autocomplete="name"
+            maxlength="150"
+        >
+
+        <label>Username</label>
+        <input
+            type="text"
+            name="username"
+            placeholder="Choose a username"
+            value="{{ request.POST.username|default:'' }}"
+            autocomplete="username"
+            maxlength="150"
+            required
+        >
+
+        <label>Email address</label>
+        <input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            value="{{ request.POST.email|default:'' }}"
+            autocomplete="email"
+            required
+        >
+
+        <label>Phone Number</label>
+        <input
+            type="tel"
+            name="phone"
+            placeholder="Enter your phone number"
+            value="{{ request.POST.phone|default:'' }}"
+            autocomplete="tel"
+            maxlength="15"
+        >
+
+        <label>Address</label>
+        <textarea
+            name="address"
+            placeholder="Enter your address"
+            rows="3"
+        >{{ request.POST.address|default:'' }}</textarea>
+
+        <label>Password</label>
+        <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Minimum 8 characters"
+            autocomplete="new-password"
+            minlength="8"
+            required
+        >
+
+        <label>Confirm password</label>
+        <input
+            type="password"
+            name="confirm_password"
+            id="confirm_password"
+            placeholder="Enter password again"
+            autocomplete="new-password"
+            minlength="8"
+            required
+        >
+
+        <label style="display:flex;gap:9px;align-items:center">
+            <input
+                type="checkbox"
+                onclick="togglePasswords()"
+                style="width:auto"
+            >
+            Show passwords
+        </label>
+
+        <button class="btn full" type="submit">
+            Create Account →
+        </button>
+    </form>
+
+    <p class="muted" style="text-align:center;margin-top:24px">
+        Already registered?
+        <a href="{% url 'login' %}" style="color:#c4b5fd">
+            Sign in
+        </a>
+    </p>
+</div>
+
+<script>
+function togglePasswords() {
+    ["password", "confirm_password"].forEach(id => {
+        const field = document.getElementById(id);
+        field.type = field.type === "password" ? "text" : "password";
+    });
+}
+</script>
+{% endblock %}

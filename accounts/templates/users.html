@@ -1,0 +1,61 @@
+
+{% extends "base.html" %}
+{% block title %}User Management | AuthSpace{% endblock %}
+{% block content %}
+<h1>User Management</h1>
+<p class="muted">View and manage registered accounts.</p>
+
+<div class="panel">
+    <div style="display:flex;justify-content:space-between;
+                align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:20px">
+        <h2 style="font-size:19px">Registered Users</h2>
+        <a class="btn" href="{% url 'user_create' %}">+ Add User</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in users %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.username }}</td>
+                    <td>{{ item.email|default:"—" }}</td>
+                    <td>
+                        {% if item.is_superuser %}Superuser
+                        {% elif item.is_staff %}Staff
+                        {% else %}User{% endif %}
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a class="btn small outline"
+                               href="{% url 'user_update' item.pk %}">Edit</a>
+                            {% if item.pk != request.user.pk and not item.is_superuser %}
+                            <form method="post"
+                                  action="{% url 'user_delete' item.pk %}"
+                                  onsubmit="return confirm('Delete this user permanently?')">
+                                {% csrf_token %}
+                                <button class="btn small"
+                                        style="background:#991b1b"
+                                        type="submit">Delete</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">No users found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

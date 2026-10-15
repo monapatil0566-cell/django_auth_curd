@@ -1,0 +1,157 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard | AuthSpace{% endblock %}
+
+{% block content %}
+
+<div class="dash-heading">
+    <div>
+        <span class="eyebrow">YOUR WORKSPACE</span>
+        <h1>Welcome back, {{ request.user.username }} 👋</h1>
+        <p class="muted">
+            Manage your account, review your profile and stay in control.
+        </p>
+    </div>
+
+    <div class="avatar">
+        {{ request.user.username|first|upper }}
+    </div>
+</div>
+
+<div class="stats">
+    <div class="stat stat-purple">
+        <div class="stat-top">
+            <span class="stat-icon">✓</span>
+            <span class="status-dot"></span>
+        </div>
+        <strong>Secure</strong>
+        <span class="muted">Authenticated session</span>
+    </div>
+
+    <div class="stat">
+        <div class="stat-top">
+            <span class="stat-icon">●</span>
+        </div>
+        <strong>Active</strong>
+        <span class="muted">Account status</span>
+    </div>
+
+    <div class="stat">
+        <div class="stat-top">
+            <span class="stat-icon">▦</span>
+        </div>
+        <strong>{{ request.user.date_joined|date:"d M Y" }}</strong>
+        <span class="muted">Member since</span>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+
+    <section class="panel profile-panel">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">ACCOUNT</span>
+                <h2>Profile Settings</h2>
+                <p class="muted">
+                    Keep your account information up to date.
+                </p>
+            </div>
+            <span class="panel-icon">⚙</span>
+        </div>
+
+        <div class="profile-summary">
+            <div class="avatar avatar-small">
+                {{ request.user.username|first|upper }}
+            </div>
+            <div>
+                <strong>{{ request.user.username }}</strong>
+                <p class="muted">
+                    {% if request.user.is_staff %}
+                        Administrator
+                    {% else %}
+                        Member account
+                    {% endif %}
+                </p>
+            </div>
+            <span class="pill">● Active</span>
+        </div>
+
+        <form method="post" action="{% url 'profile_update' %}">
+            {% csrf_token %}
+
+            <label>Username</label>
+            <input
+                type="text"
+                value="{{ request.user.username }}"
+                disabled
+            >
+
+            <label>Email address</label>
+            <input
+                type="email"
+                name="email"
+                value="{{ request.user.email }}"
+                placeholder="Enter your email"
+                required
+            >
+
+            <button class="btn full" type="submit">
+                Save Changes →
+            </button>
+        </form>
+    </section>
+
+    <aside class="side-column">
+        <section class="panel security-panel">
+            <span class="security-icon">🛡️</span>
+            <h2>Security Overview</h2>
+            <p class="muted">
+                Your account is protected by Django authentication.
+            </p>
+
+            <div class="security-row">
+                <span>Login session</span>
+                <strong>Verified</strong>
+            </div>
+
+            <div class="security-row">
+                <span>Password</span>
+                <strong>Protected</strong>
+            </div>
+
+            <div class="security-row">
+                <span>Account</span>
+                <strong>Active</strong>
+            </div>
+        </section>
+
+        {% if request.user.is_staff %}
+        <section class="panel admin-panel">
+            <span class="eyebrow">ADMIN TOOLS</span>
+            <h2>User Management</h2>
+            <p class="muted">
+                Create accounts, edit user information and manage existing
+                users.
+            </p>
+
+            <a class="btn full" href="{% url 'user_list' %}">
+                Manage Users →
+            </a>
+        </section>
+        {% endif %}
+    </aside>
+
+</div>
+
+<div class="bottom-note">
+    <span>✦</span>
+    <div>
+        <strong>Your workspace, your control.</strong>
+        <p class="muted">
+            Keep your profile information accurate and your account secure.
+        </p>
+    </div>
+</div>
+
+{% endblock %}
